@@ -1,15 +1,21 @@
-# Lucky Day - Telegram Mini App Service Documentation
+# Lucky Day - Telegram Mini App
+
+> **MVP Completed** - Play-to-Earn Web3 Gaming Platform
 
 ## Table of Contents
 - [Overview](#overview)
+- [Project Status](#project-status)
 - [Core Features](#core-features)
 - [Reward System](#reward-system)
 - [Mini Games](#mini-games)
+- [Level & Tier System](#level--tier-system)
 - [Monetization](#monetization)
 - [User Progression](#user-progression)
 - [Technical Architecture](#technical-architecture)
 - [Admin Dashboard](#admin-dashboard)
 - [Integrations](#integrations)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
 
 ---
 
@@ -24,9 +30,33 @@
 | Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS v4 |
 | Backend | Next.js API Routes, Supabase (PostgreSQL) |
 | Blockchain | TON Network, TON Connect |
+| UI | Framer Motion, Radix UI, Lucide Icons |
+| Audio | Howler.js |
 | Authentication | Telegram WebApp API |
 | Payments | Telegram Stars, TON Crypto |
 | Languages | English, Korean, Japanese, Chinese, Russian |
+
+---
+
+## Project Status
+
+### MVP Features (Completed)
+
+- [x] 12 Skill-based mini-games
+- [x] Daily spin system with server-side game selection
+- [x] Weighted random reward distribution
+- [x] Level system (300 levels, 10 tiers)
+- [x] Premium membership with daily bonuses
+- [x] TON wallet integration (TON Connect)
+- [x] Telegram Stars & TON payments
+- [x] Referral system with revenue sharing
+- [x] Weekly leaderboard with prizes
+- [x] Daily check-in rewards
+- [x] Task system (social tasks)
+- [x] Admin dashboard
+- [x] Multi-language support (5 languages)
+- [x] Ad integration (Adsgram)
+- [x] Push notifications via Telegram Bot
 
 ---
 
@@ -63,30 +93,72 @@
 
 ## Mini Games
 
-### Available Games (12 Total)
+### Available Games (11 Active + 1 Disabled)
 
-| Game | ID | Icon | Description |
-|------|----|------|-------------|
-| Neon Pulse | timing | Target | Hit the target at the perfect moment |
-| Reflex Dodge | dodge | Lightning | Dodge incoming obstacles |
-| Cyber Switch | switch | Brain | Memorize and toggle switches correctly |
-| Neon Slider | slider | Numbers | Slide tiles to solve the puzzle |
-| One Line | oneline | Pencil | Draw the shape without lifting |
-| Cross Road | crossroad | Chicken | Navigate traffic safely |
-| Neon Stack | stack | Building | Stack blocks perfectly |
-| Connect Lines | connectlines | Lines | Connect matching endpoints |
-| Maze Escape | maze | Compass | Find the exit path |
-| Neon Hue | colormatch | Palette | Match colors quickly |
-| Neon Keys | pianotiles | Piano | Tap tiles in rhythm |
-| Memory Flip | memoryflip | Brain | Match card pairs |
+| Game | ID | Icon | Type | Status |
+|------|----|------|------|--------|
+| Neon Pulse | timing | 🎯 | Timing | Active |
+| Reflex Dodge | dodge | ⚡ | Reflex | Active |
+| Cyber Switch | switch | 🧠 | Memory | Active |
+| Neon Slider | slider | 🔢 | Puzzle | Active |
+| One Line | oneline | ✏️ | Drawing | Active |
+| Cross Road | crossroad | 🐔 | Arcade | Active |
+| Neon Stack | stack | 🏗️ | Stacking | Active |
+| Maze Escape | maze | 🧭 | Navigation | Active |
+| Neon Hue | colormatch | 🎨 | Matching | Active |
+| Neon Keys | pianotiles | 🎹 | Rhythm | Active |
+| Memory Flip | memoryflip | 🧠 | Memory | Active |
+| Neon Flow | connectlines | 🔗 | Puzzle | Disabled |
 
-### Game Properties
+### Game Architecture
 
-Each game has configurable:
-- **Difficulty range** (min/max)
-- **Active status** (can be disabled)
-- **Description keys** (i18n support)
-- **Color theme** (gradient styling)
+- **Server-side selection**: Game is randomly chosen on server to prevent manipulation
+- **Session-based validation**: 5-minute timeout per session
+- **Configurable properties**: Active status, difficulty, i18n keys, color themes
+- **Legacy support**: Disabled games preserved in history
+
+---
+
+## Level & Tier System
+
+### Tier Progression (10 Tiers)
+
+| Tier | Name | Levels | Requirements |
+|------|------|--------|--------------|
+| 1 | Bronze | 1-29 | Starting tier |
+| 2 | Silver | 30-59 | ~1,500 CLUBS |
+| 3 | Gold | 60-89 | ~7,500 CLUBS |
+| 4 | Platinum | 90-119 | ~27,500 CLUBS |
+| 5 | Diamond | 120-149 | ~77,500 CLUBS |
+| 6 | Master | 150-179 | ~177,500 CLUBS |
+| 7 | Grandmaster | 180-209 | ~300,000 CLUBS |
+| 8 | Legend | 210-239 | ~500,000 CLUBS |
+| 9 | Mythic | 240-269 | ~800,000 CLUBS |
+| 10 | Immortal | 270-300 | ~1,000,000+ CLUBS |
+
+### Level Requirements
+
+Level up requires both:
+- **CLUBS earned** (from games, rewards, referrals)
+- **Spins completed** (daily + bonus)
+
+### Level Rewards
+
+| Level Type | Base Reward | Premium Bonus |
+|------------|-------------|---------------|
+| Normal (1,2,3...) | CLUBS only | 2x CLUBS + Spins |
+| Every 5th (5,10,15...) | CLUBS + Spins | 2x both |
+| Every 10th (10,20,30...) | Higher CLUBS + Spins | 2x both |
+| Tier Up (30,60,90...) | Major rewards | 2x both |
+
+### Milestone Rewards
+
+| Level | Base | Premium |
+|-------|------|---------|
+| 100 | 3,000 CLUBS + 5 Spins | 6,000 CLUBS + 10 Spins |
+| 200 | 10,000 CLUBS + 10 Spins | 20,000 CLUBS + 20 Spins |
+| 250 | 20,000 CLUBS + 15 Spins | 40,000 CLUBS + 30 Spins |
+| 300 | 50,000 CLUBS + 30 Spins | 100,000 CLUBS + 60 Spins |
 
 ---
 
@@ -117,16 +189,17 @@ Each game has configurable:
 
 ### Membership System
 
-| Duration | Benefits |
-|----------|----------|
-| 7 Days | Daily bonus spins + CLUBS |
-| 30 Days | Daily bonus spins + CLUBS |
-| 90 Days | Daily bonus spins + CLUBS |
+| Tier | Duration | Daily Spins | Daily CLUBS |
+|------|----------|-------------|-------------|
+| Bronze | 7 Days | +1 | 100 |
+| Silver | 30 Days | +2 | 300 |
+| Gold | 90 Days | +3 | 500 |
 
-Memberships are stackable and provide:
-- Extra daily spins
+**Membership Benefits:**
+- Extra daily spins (claimable via membership page)
 - Daily CLUBS bonus
-- Ad-free experience (optional)
+- **Premium level rewards** (2x base rewards)
+- Stackable duration (multiple purchases extend membership)
 
 ---
 
@@ -166,8 +239,15 @@ Tasks reward CLUBS and bonus spins upon completion.
 
 ### Check-In System
 
+| Day | CLUBS | Spins |
+|-----|-------|-------|
+| 1-6 | 50-100 | 0 |
+| 7 (Weekly) | 500 | 1 |
+
+**Features:**
 - Daily consecutive login bonuses
 - Progressive rewards for streaks
+- Weekly bonus on day 7
 - Resets on missed days
 
 ---
@@ -187,19 +267,6 @@ Tasks reward CLUBS and bonus spins upon completion.
 | tasks | Achievement tracking |
 | leaderboard_snapshot | Weekly standings |
 | user_memberships | Subscription records |
-
-### Key API Endpoints
-
-| Endpoint | Purpose |
-|----------|---------|
-| `/api/app/init` | Initialize user session |
-| `/api/game/start` | Create game session |
-| `/api/game/complete` | Verify and complete game |
-| `/api/rewards/claim` | Claim pending rewards |
-| `/api/shop/create-invoice` | Create Stars payment |
-| `/api/shop/ton-checkout` | Create TON transaction |
-| `/api/leaderboard` | Get rankings |
-| `/api/referral` | Manage referrals |
 
 ### Security Features
 
@@ -276,41 +343,102 @@ Tasks reward CLUBS and bonus spins upon completion.
 
 ---
 
-## Environment Variables
+## Project Structure
 
-```env
-# Database
-NEXT_PUBLIC_SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# Telegram
-TELEGRAM_BOT_TOKEN=
-NEXT_PUBLIC_BOT_USERNAME=
-
-# TON
-TON_USD_PRICE=5.5
-TON_MINTER_ADDRESS=
-NEXT_PUBLIC_TON_CONNECT_MANIFEST_URL=
-
-# Payments
-STARS_TO_USD_RATE=0.013
-
-# Admin
-DASHBOARD_ADMINS=email:password
-DASHBOARD_JWT_SECRET=
-
-# Ads
-NEXT_PUBLIC_ADSGRAM_BLOCK_ID=
-
-# App
-APP_URL=
-CRON_SECRET=
+```
+web/
+├── app/                    # Next.js App Router
+│   ├── api/               # API Routes (70+ endpoints)
+│   │   ├── admin/         # Admin operations
+│   │   ├── game/          # Game sessions
+│   │   ├── level/         # Level rewards
+│   │   ├── shop/          # Purchases
+│   │   ├── user/          # User data
+│   │   └── ...
+│   ├── admin-portal/      # Admin dashboard pages
+│   └── (main)/            # Main app layout
+├── components/
+│   ├── games/             # 12 mini-game components
+│   ├── ui/                # Radix UI components
+│   └── ...                # Feature components
+├── lib/                   # Utilities & services
+│   ├── games.ts           # Game configuration
+│   ├── levelSystem.ts     # Level calculations
+│   ├── rewards.server.ts  # Reward pool (server-only)
+│   ├── tonConnect.ts      # TON wallet integration
+│   └── ...
+├── sql/                   # Database schemas
+└── public/                # Static assets
 ```
 
 ---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Supabase project
+- Telegram Bot Token
+- TON wallet (for payouts)
+
+### Installation
+
+```bash
+# Clone repository
+git clone <repo-url>
+cd telegram_web3_project/web
+
+# Install dependencies
+npm install
+
+# Set environment variables
+cp .env.example .env.local
+# Edit .env.local with your values
+
+# Run development server
+npm run dev
+```
+
+### Database Setup
+
+1. Create Supabase project
+2. Run SQL migrations from `web/sql/` in order:
+   - `full_schema.sql` (base tables)
+   - `game_sessions_schema.sql`
+   - `level_config_schema.sql`
+   - `membership_schema.sql`
+   - `weekly_leaderboard_schema.sql`
+   - Other schemas as needed
+
+### Telegram Bot Setup
+
+1. Create bot via [@BotFather](https://t.me/botfather)
+2. Enable Web App mode
+3. Set webhook URL to `/api/telegram/webhook`
+4. Configure Mini App URL
+
+---
+
+## Roadmap
+
+### Planned Features
+
+- [ ] Tier-exclusive game modes (Silver+)
+- [ ] Weekly challenges
+- [ ] Achievement system
+- [ ] NFT integration (rewards, profile badges)
+- [ ] Tournament mode
+- [ ] Social features (friends, guilds)
+
+---
+
+## License
+
+Private - All rights reserved
 
 ---
 
 ## Support
 
-For issues or feature requests, please contact the development team or submit via GitHub Issues.
+For issues or feature requests, contact the development team or submit via GitHub Issues.
